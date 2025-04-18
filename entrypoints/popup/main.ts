@@ -1,24 +1,29 @@
-import './style.css';
-import typescriptLogo from '@/assets/typescript.svg';
-import viteLogo from '/wxt.svg';
-import { setupCounter } from '@/components/counter';
+// entrypoints/popup.ts
+import { browser } from 'wxt/browser';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://wxt.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="WXT logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>WXT + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the WXT and TypeScript logos to learn more
-    </p>
-  </div>
-`;
+document.addEventListener('DOMContentLoaded', async () => {
+  // Send a message to the background script
+  console.log('Popup script loaded');
+  document.querySelector('.loading')?.classList.add('visible');
+  browser.runtime.sendMessage({ action: 'injectContentScript' });
+  browser.runtime.onMessage.addListener((message) => {
+    console.log('client message', message);
+    if (message.action === 'api-response') {
+      console.log('API response', message.params);
+      const content = document.querySelector('.content') as HTMLElement;
+      const description = document.querySelector('.description') as HTMLElement;
+      const list = document.createElement('ul');
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!);
+      Object.keys(message.params).forEach((key) => {
+        const item = document.createElement('li');
+        item.textContent = `${key}: ${message.params[key]}`;
+        list.appendChild(item);
+      });
+
+      description.appendChild(list);
+      content.classList.add('visible');
+
+      document.querySelector('.loading')?.classList.remove('visible');
+    }
+  });
+});

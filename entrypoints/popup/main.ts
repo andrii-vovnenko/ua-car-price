@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       Object.keys(message.params).forEach((key) => {
         const item = document.createElement('li');
-        item.textContent = `${key}: ${message.params[key]}`;
+        if (key === 'brand') {
+          item.textContent = `${key}: ${message.params[key].name} | ${message.params[key].value}`;
+        } else {
+          item.textContent = `${key}: ${message.params[key]}`;
+        }
         list.appendChild(item);
       });
 

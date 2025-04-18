@@ -17,5 +17,8 @@
   "devDependencies": {
     "typescript": "^5.8.3",
     "wxt": "^0.20.0"
+  },
+  "dependencies": {
+    "fuse.js": "^7.1.0"
   }
 }

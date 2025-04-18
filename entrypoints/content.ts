@@ -1,3 +1,5 @@
+import { matchCarBrand } from '@/utils';
+
 export default defineContentScript({
   matches: ['https://*.schadeautos.nl/*'],
   registration: 'runtime',
@@ -21,22 +23,17 @@ export default defineContentScript({
       }
     }
 
-    const mark = carData.get('brand');
-    const model = carData.get('model');
     const fuel = carData.get('fuel');
     const production = carData.get('erd');
+
+    const brand = matchCarBrand(carData.get('brand') || '');
+    const model = matchCarModel(brand?.value || 0, carData.get('model') || '');
     
-    console.log('Sending message to background', {
-      mark,
-      model,
-      fuel,
-      production,
-    });
     await browser.runtime.sendMessage({
       action: 'car-data',
       params: {
-        mark,
-        model,
+        brand: brand,
+        model: model,
         fuel,
         production,
       }

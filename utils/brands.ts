@@ -1,6 +1,5 @@
-import Fuse from 'fuse.js';
-import { carModels, CarModel } from './models';
-import { fuelTypes } from './fuel';
+import { CarBrand } from './types';
+
 export const carBrands: CarBrand[] = [
   {
       "name": "Abarth",
@@ -1499,46 +1498,3 @@ export const carBrands: CarBrand[] = [
       "value": 2307
   }
 ]
-
-const brandIdToModesMap: Record<string, CarModel[]> = carModels;
-
-type CarBrand = {
-  name: string;
-  value: number;
-}
-
-export const matchFuel = (fuel: string) => {
-  const fuelType = fuelTypes.find((fuelType) => fuelType.name.toLowerCase() === fuel.toLowerCase());
-  return fuelType;
-}
-
-export const matchCarBrand = (brand: string): CarBrand | undefined => {
-  const carBrand = carBrands.find((carBrand) => carBrand.name.toLowerCase() === brand.toLowerCase());
-  return carBrand;
-}
-
-export const matchCarModel = (brandId: number, model: string): CarModel | undefined => {
-  console.log({ brandId, model });
-  const fuse = new Fuse(brandIdToModesMap[brandId], {
-    includeScore: true,
-    isCaseSensitive: false,
-    keys: ['name'],
-    threshold: 0.2,
-    findAllMatches: false,
-    shouldSort: true,
-  });
-  const modelParts = model
-    .replace(/[!]/g, '')
-    .split(' ');
-
-  let result: any = [];
-  
-  while (modelParts.length > 0) {
-    const model = modelParts.join(' ');
-    result = fuse.search(model) as any;
-    if (result && result.length > 0) break;
-    modelParts.pop();
-  }
-
-  return result?.[0]?.item;
-}

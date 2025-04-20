@@ -1,5 +1,3 @@
-import { matchCarBrand, matchFuel, matchCarModel } from '@/utils';
-
 export default defineContentScript({
   matches: ['https://*.schadeautos.nl/*'],
   registration: 'runtime',
@@ -13,29 +11,28 @@ export default defineContentScript({
     }
 
     const rows = specTable.querySelectorAll("tr");
-    const carData = new Map<string, string>();
+    const rawCarData = new Map<string, string>();
+
     for (const row of rows) {
       const cells = row.querySelectorAll("td");
       const key = cells[0].textContent;
       const value = cells[1].textContent;
       if (key && value) {
-        carData.set(key.replace(':', '').trim().toLowerCase(), value.trim());
+        rawCarData.set(key.replace(':', '').trim().toLowerCase(), value.trim());
       }
     }
 
-    const fuel = carData.get('fuel');
-    const production = carData.get('erd');
-
-    const brand = matchCarBrand(carData.get('brand') || '');
-    const model = matchCarModel(brand?.value || 0, carData.get('model') || '');
-    const fuelType = matchFuel(fuel || '');
+    const fuel = rawCarData.get('fuel') || '';
+    const production = rawCarData.get('erd') || '';
+    const brand = rawCarData.get('brand') || '';
+    const model = rawCarData.get('model') || '';
 
     await browser.runtime.sendMessage({
-      action: 'car-data',
+      action: 'raw-carData',
       params: {
-        brand: brand,
-        model: model,
-        fuel: fuelType,
+        brand,
+        model,
+        fuel,
         production,
       }
     }).catch((error) => {

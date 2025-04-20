@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (message.action === 'api-response') {
       console.log('API response', message.params);
       const content = document.querySelector('.content') as HTMLElement;
+      const brandLogo = document.querySelector('.brand-logo') as HTMLImageElement;
       const description = document.querySelector('.description') as HTMLElement;
       const list = document.createElement('ul');
 

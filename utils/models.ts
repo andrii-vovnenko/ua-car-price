@@ -1,12 +1,6 @@
-export type CarModel = {
-  name: string;
-  value: number;
-  count: number;
-  isGroup: number;
-  parentId: number;
-}
+import { CarModel } from './types';
 
-export const carModels = {
+export const carModels: Record<string, CarModel[]> = {
   "2": [
     {
       "name": "City",

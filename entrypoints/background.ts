@@ -1,5 +1,6 @@
 // entrypoints/background.ts
 import { browser } from 'wxt/browser';
+import { communication } from '../utils/Comunication';
 const shadeAutosUrl = 'www.schadeautos.nl';
 
 const hostToScriptMap: Record<string, string> = {
@@ -7,8 +8,7 @@ const hostToScriptMap: Record<string, string> = {
 };
 
 export default defineBackground(async () => {
-  browser.runtime.onMessage.addListener(async (message) => {
-    if (message.action === 'injectContentScript') {
+  communication.listen(communication.actions.INJECT_CONTENT_SCRIPT, async () => {
       browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         if (tabs.length > 0 && tabs[0].id) {
           const tabId = tabs[0].id;
@@ -36,24 +36,23 @@ export default defineBackground(async () => {
           }
         }
       });
-    } else if (message.action === 'raw-carData') {
-      const carData = new ShadeautosParser({
+  });
+
+  communication.listen(communication.actions.RAW_CAR_DATA, async (params) => {
+    const carData = new ShadeautosParser({
         rawCarData: {
-          brand: message.params.brand,
-          model: message.params.model,
-          fuel: message.params.fuel,
-          productionYear: message.params.production
+          brand: params.brand,
+          model: params.model,
+          fuel: params.fuel,
+          productionYear: params.productionYear
         },
       });
 
-      console.log('Car data', carData);
-
-      browser.runtime.sendMessage({ action: 'api-response', params: {
+      communication.emit(communication.actions.API_RESPONSE, {
         brand: carData.carBrand,
         model: carData.carModel,
         fuel: carData.carFuel,
         productionYear: carData.carProductionYear,
-      } });
-    }
+      });
   });
 });

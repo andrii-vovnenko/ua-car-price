@@ -8,7 +8,6 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
 
   constructor({ rawCarData }: { rawCarData: RawCarData }) {
     super({ rawCarData });
-
     this.validate();
 
     this.carBrand = this.parseBrand();

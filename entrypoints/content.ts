@@ -1,8 +1,9 @@
+import { communication } from '../utils/Comunication';
+
 export default defineContentScript({
   matches: ['https://*.schadeautos.nl/*'],
   registration: 'runtime',
   async main() {
-    console.log('Content script loaded', new Date().toISOString());
     const specTable = document.querySelector("div.col12.m-b-lg.specifications > table > tbody");
 
     if (!specTable) {
@@ -27,16 +28,11 @@ export default defineContentScript({
     const brand = rawCarData.get('brand') || '';
     const model = rawCarData.get('model') || '';
 
-    await browser.runtime.sendMessage({
-      action: 'raw-carData',
-      params: {
-        brand,
-        model,
-        fuel,
-        production,
-      }
-    }).catch((error) => {
-      console.log('Content script error', error);
+    communication.emit(communication.actions.RAW_CAR_DATA, {
+      brand,
+      model,
+      fuel,
+      productionYear: production,
     });
   },
 });

@@ -55,6 +55,17 @@ body {
   }
 }
 
+.error {
+  display: none;
+  &.visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

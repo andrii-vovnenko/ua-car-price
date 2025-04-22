@@ -1,10 +1,16 @@
 import { IParserCarData, RawCarData, ParserCarData } from './parseCarData';
 
 export class ShadeautosParser extends ParserCarData implements IParserCarData {
+  carBrand: DefaultCarEntity;
+  carModel: DefaultCarEntity;
+  carFuel: DefaultCarEntity;
+  carProductionYear: DefaultCarEntity;
+  carEngineCapacity?: DefaultCarEntity | null;
+
   constructor({ rawCarData }: { rawCarData: RawCarData }) {
     super({ rawCarData });
     this.validate();
-    console.log('rawCarData', this.rawCarData);
+    
     this.carBrand = this.parseBrand();
     this.carModel = this.parseModel();
     this.carFuel = this.parseFuel();
@@ -96,7 +102,6 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     
     while (modelParts.length > 0) {
       const model = modelParts.join(' ');
-      // console.log('model', model, this.constantsLibrary.carModels[this.carBrand.value]);
       result = this._advancedSearch(
         this.constantsLibrary.carModels[this.carBrand.value] || [],
         model

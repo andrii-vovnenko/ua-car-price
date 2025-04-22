@@ -5,14 +5,16 @@ const actions = {
   INJECT_CONTENT_SCRIPT: 'INJECT_CONTENT_SCRIPT',
   API_RESPONSE: 'API_RESPONSE',
   RAW_CAR_DATA: 'RAW_CAR_DATA',
+  ERROR: 'ERROR',
 } as const;
 
 type Action = typeof actions[keyof typeof actions];
 
 type CallbackType<T extends Action> = 
   T extends typeof actions.INJECT_CONTENT_SCRIPT ? () => void :
-  T extends typeof actions.API_RESPONSE ? (carData: { brand: DefaultCarEntity, model: DefaultCarEntity, fuel: DefaultCarEntity, productionYear: DefaultCarEntity, engineCapacity: DefaultCarEntity | null }) => void :
+  T extends typeof actions.API_RESPONSE ? (carData: { brand: DefaultCarEntity, model: DefaultCarEntity, fuel: DefaultCarEntity, productionYear: DefaultCarEntity, engineCapacity?: DefaultCarEntity | null }) => void :
   T extends typeof actions.RAW_CAR_DATA ? (rawCarData: RawCarData) => void :
+  T extends typeof actions.ERROR ? (error: string) => void :
   never;
 
 export class Communication {
@@ -23,6 +25,7 @@ export class Communication {
     [this.actions.INJECT_CONTENT_SCRIPT]: [],
     [this.actions.API_RESPONSE]: [],
     [this.actions.RAW_CAR_DATA]: [],
+    [this.actions.ERROR]: [],
   };
 
   private constructor() {

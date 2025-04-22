@@ -39,7 +39,8 @@ export default defineBackground(async () => {
   });
 
   communication.listen(communication.actions.RAW_CAR_DATA, async (params) => {
-    const carData = new ShadeautosParser({
+    try {
+      const carData = new ShadeautosParser({
         rawCarData: {
           brand: params.brand,
           model: params.model,
@@ -48,7 +49,6 @@ export default defineBackground(async () => {
           engineCapacity: params.engineCapacity,
         },
       });
-
       communication.emit(communication.actions.API_RESPONSE, {
         brand: carData.carBrand,
         model: carData.carModel,
@@ -56,5 +56,8 @@ export default defineBackground(async () => {
         productionYear: carData.carProductionYear,
         engineCapacity: carData.carEngineCapacity,
       });
+    } catch (error: any) {
+      communication.emit(communication.actions.ERROR, error.message as string);
+    }
   });
 });

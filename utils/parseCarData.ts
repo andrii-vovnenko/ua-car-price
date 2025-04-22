@@ -20,11 +20,6 @@ export type RawCarData = {
 
 export interface IParserCarData {
   rawCarData: RawCarData;
-  carBrand?: DefaultCarEntity;
-  carModel?: DefaultCarEntity;
-  carFuel?: DefaultCarEntity;
-  carProductionYear?: DefaultCarEntity;
-  carEngineCapacity?: DefaultCarEntity | null;
   Searcher: typeof Fuse;
   validate(): void;
   parseBrand(): DefaultCarEntity;
@@ -38,11 +33,6 @@ export class ParserCarData implements IParserCarData {
   rawCarData: RawCarData;
   constantsLibrary: ConstantsLibrary;
   Searcher: typeof Fuse;
-  carBrand?: DefaultCarEntity;
-  carModel?: DefaultCarEntity;
-  carFuel?: DefaultCarEntity;
-  carProductionYear?: DefaultCarEntity;
-  carEngineCapacity?: DefaultCarEntity | null;
   constructor({
     rawCarData,
   }: {

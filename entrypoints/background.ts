@@ -44,7 +44,8 @@ export default defineBackground(async () => {
           brand: params.brand,
           model: params.model,
           fuel: params.fuel,
-          productionYear: params.productionYear
+          productionYear: params.productionYear,
+          engineCapacity: params.engineCapacity,
         },
       });
 
@@ -53,6 +54,7 @@ export default defineBackground(async () => {
         model: carData.carModel,
         fuel: carData.carFuel,
         productionYear: carData.carProductionYear,
+        engineCapacity: carData.carEngineCapacity,
       });
   });
 });

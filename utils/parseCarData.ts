@@ -15,6 +15,7 @@ export type RawCarData = {
   model: string;
   fuel: string;
   productionYear: string;
+  engineCapacity?: string;
 };
 
 export interface IParserCarData {
@@ -23,12 +24,14 @@ export interface IParserCarData {
   carModel?: DefaultCarEntity;
   carFuel?: DefaultCarEntity;
   carProductionYear?: DefaultCarEntity;
+  carEngineCapacity?: DefaultCarEntity | null;
   Searcher: typeof Fuse;
   validate(): void;
   parseBrand(): DefaultCarEntity;
   parseModel(): DefaultCarEntity;
   parseFuel(): DefaultCarEntity;
   parseProductionYear(): DefaultCarEntity;
+  parseEngineCapacity(): DefaultCarEntity | null;
 }
 
 export class ParserCarData implements IParserCarData {
@@ -39,7 +42,7 @@ export class ParserCarData implements IParserCarData {
   carModel?: DefaultCarEntity;
   carFuel?: DefaultCarEntity;
   carProductionYear?: DefaultCarEntity;
-
+  carEngineCapacity?: DefaultCarEntity | null;
   constructor({
     rawCarData,
   }: {
@@ -73,6 +76,10 @@ export class ParserCarData implements IParserCarData {
   parseProductionYear(): DefaultCarEntity {
     throw new Error('Not implemented');
   }
+
+  parseEngineCapacity(): DefaultCarEntity | null {
+    throw new Error('Not implemented');
+  }
   
   _simpleSearch(
     list: (CarBrand | CarModel | CarFuel)[],
@@ -90,7 +97,7 @@ export class ParserCarData implements IParserCarData {
       includeScore: true,
       isCaseSensitive: false,
       keys: ['name'],
-      threshold: 0.2,
+      threshold: 0.3,
       findAllMatches: false,
       shouldSort: true,
     });

@@ -1,6 +1,6 @@
 export type DefaultCarEntity = {
   name: string;
-  value: number;
+  value: number | string;
 };
 
 export type CarBrand = DefaultCarEntity;

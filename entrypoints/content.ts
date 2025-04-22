@@ -27,12 +27,14 @@ export default defineContentScript({
     const production = rawCarData.get('erd') || '';
     const brand = rawCarData.get('brand') || '';
     const model = rawCarData.get('model') || '';
-
+    const engineCapacity = rawCarData.get('engine capacity') || '';
+    
     communication.emit(communication.actions.RAW_CAR_DATA, {
       brand,
       model,
       fuel,
       productionYear: production,
+      engineCapacity: engineCapacity,
     });
   },
 });

@@ -3,11 +3,19 @@ import { communication } from '../utils/Comunication';
 export default defineContentScript({
   matches: ['https://*.schadeautos.nl/*'],
   registration: 'runtime',
-  async main() {
+  async main(ctx) {
+    const url = new URL(window.location.href);
+    const [lang, ...path] = url.pathname.split('/').filter(Boolean);
+    if (lang !== 'en') {
+      // Add a small delay before redirecting to ensure any pending operations complete
+      communication.emit(communication.actions.CLOSE);
+      window.location.href = `/en/${path.join('/')}`;
+    }
+    
     const specTable = document.querySelector("div.col12.m-b-lg.specifications > table > tbody");
 
     if (!specTable) {
-      console.log('No spec table found');
+      communication.emit(communication.actions.ERROR, 'No spec table found');
       return;
     }
 

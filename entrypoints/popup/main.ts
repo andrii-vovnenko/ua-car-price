@@ -33,4 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     errorElement.classList.add('visible');
   });
   communication.listen(communication.actions.API_RESPONSE, apiResponseHandler);
+  communication.listen(communication.actions.CLOSE, () => {
+    window.close();
+  });
 });

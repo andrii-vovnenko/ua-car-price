@@ -6,6 +6,7 @@ const actions = {
   API_RESPONSE: 'API_RESPONSE',
   RAW_CAR_DATA: 'RAW_CAR_DATA',
   ERROR: 'ERROR',
+  CLOSE: 'CLOSE',
 } as const;
 
 type Action = typeof actions[keyof typeof actions];
@@ -15,6 +16,7 @@ type CallbackType<T extends Action> =
   T extends typeof actions.API_RESPONSE ? (carData: { brand: DefaultCarEntity, model: DefaultCarEntity, fuel: DefaultCarEntity, productionYear: DefaultCarEntity, engineCapacity?: DefaultCarEntity | null }) => void :
   T extends typeof actions.RAW_CAR_DATA ? (rawCarData: RawCarData) => void :
   T extends typeof actions.ERROR ? (error: string) => void :
+  T extends typeof actions.CLOSE ? () => void :
   never;
 
 export class Communication {
@@ -26,6 +28,7 @@ export class Communication {
     [this.actions.API_RESPONSE]: [],
     [this.actions.RAW_CAR_DATA]: [],
     [this.actions.ERROR]: [],
+    [this.actions.CLOSE]: [],
   };
 
   private constructor() {

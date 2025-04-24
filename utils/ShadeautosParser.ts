@@ -1,4 +1,5 @@
 import { IParserCarData, RawCarData, ParserCarData } from './parseCarData';
+import { CarEngineCapacity, CarProductionYear } from './types';
 
 export class ShadeautosParser extends ParserCarData implements IParserCarData {
   constructor({ rawCarData }: { rawCarData: RawCarData }) {
@@ -23,7 +24,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     }
   }
 
-  parseEngineCapacity(): DefaultCarEntity | null {
+  parseEngineCapacity(): CarEngineCapacity | null {
     if (!this.rawCarData.engineCapacity) return null;
 
     const engineCapacity = this.rawCarData.engineCapacity.split(' ')[0];
@@ -35,7 +36,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     };
   }
 
-  parseProductionYear(): DefaultCarEntity {
+  parseProductionYear(): CarProductionYear {
     const [year, month] = this.rawCarData.productionYear
       .split('/')
       .map(p => p.replace(/\D/g, '').trim());
@@ -50,13 +51,13 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     throw new Error('Invalid production year');
   }
 
-  parseBrand(): DefaultCarEntity {
-    let carBrand = this._simpleSearch(
+  parseBrand(): CarBrand {
+    let carBrand = this._simpleSearch<CarBrand>(
       this.constantsLibrary.carBrands,
       this.rawCarData.brand
     );
 
-    carBrand = this._advancedSearch(
+    carBrand = this._advancedSearch<CarBrand>(
       this.constantsLibrary.carBrands,
       this.rawCarData.brand
     );
@@ -68,7 +69,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     return carBrand;
   }
 
-  parseModel(): DefaultCarEntity {
+  parseModel(): CarModel {
     if (!this.carBrand) {
       throw new Error('Brand not found');
     }
@@ -77,11 +78,11 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
       .replace(/[!]/g, '')
       .split(' ');
   
-    let result: DefaultCarEntity | undefined = undefined;
+    let result: CarModel | undefined = undefined;
     
     while (modelParts.length > 0) {
       const model = modelParts.join(' ');
-      result = this._simpleSearch(
+      result = this._simpleSearch<CarModel>(
         this.constantsLibrary.carModels[this.carBrand.value] || [],
         model
       );
@@ -96,7 +97,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     
     while (modelParts.length > 0) {
       const model = modelParts.join(' ');
-      result = this._advancedSearch(
+      result = this._advancedSearch<CarModel>(
         this.constantsLibrary.carModels[this.carBrand.value] || [],
         model
       );
@@ -108,13 +109,13 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     throw new Error('Invalid model');
   }
 
-  parseFuel(): DefaultCarEntity {
-    let carFuel = this._simpleSearch(
+  parseFuel(): CarFuel {
+    let carFuel = this._simpleSearch<CarFuel>(
       this.constantsLibrary.carFuels,
       this.rawCarData.fuel
     );
 
-    carFuel = this._advancedSearch(
+    carFuel = this._advancedSearch<CarFuel>(
       this.constantsLibrary.carFuels,
       this.rawCarData.fuel
     );

@@ -7,7 +7,8 @@ import {
   CarModel,
   CarFuel,
   ConstantsLibrary,
-  DefaultCarEntity,
+  CarProductionYear,
+  CarEngineCapacity,
 } from './types';
 
 export type RawCarData = {
@@ -19,25 +20,30 @@ export type RawCarData = {
 };
 
 export interface IParserCarData {
+  carBrand: CarBrand;
+  carModel: CarModel;
+  carFuel: CarFuel;
+  carProductionYear: CarProductionYear;
+  carEngineCapacity?: CarEngineCapacity | null;
   rawCarData: RawCarData;
   Searcher: typeof Fuse;
   validate(): void;
-  parseBrand(): DefaultCarEntity;
-  parseModel(): DefaultCarEntity;
-  parseFuel(): DefaultCarEntity;
-  parseProductionYear(): DefaultCarEntity;
-  parseEngineCapacity(): DefaultCarEntity | null;
+  parseBrand(): CarBrand;
+  parseModel(): CarModel;
+  parseFuel(): CarFuel;
+  parseProductionYear(): CarProductionYear;
+  parseEngineCapacity(): CarEngineCapacity | null;
 }
 
 export class ParserCarData implements IParserCarData {
   rawCarData: RawCarData;
   constantsLibrary: ConstantsLibrary;
   Searcher: typeof Fuse;
-  carBrand: DefaultCarEntity;
-  carModel: DefaultCarEntity;
-  carFuel: DefaultCarEntity;
-  carProductionYear: DefaultCarEntity;
-  carEngineCapacity?: DefaultCarEntity | null;
+  carBrand: CarBrand;
+  carModel: CarModel;
+  carFuel: CarFuel;
+  carProductionYear: CarProductionYear;
+  carEngineCapacity?: CarEngineCapacity | null;
   constructor({
     rawCarData,
   }: {
@@ -61,38 +67,38 @@ export class ParserCarData implements IParserCarData {
     throw new Error('Not implemented');
   }
 
-  parseBrand(): DefaultCarEntity {
+  parseBrand(): CarBrand {
     throw new Error('Not implemented');
   }
 
-  parseModel(): DefaultCarEntity {
+  parseModel(): CarModel {
     throw new Error('Not implemented');
   }
   
-  parseFuel(): DefaultCarEntity {
+  parseFuel(): CarFuel {
     throw new Error('Not implemented');
   }
 
-  parseProductionYear(): DefaultCarEntity {
+  parseProductionYear(): CarProductionYear {
     throw new Error('Not implemented');
   }
 
-  parseEngineCapacity(): DefaultCarEntity | null {
+  parseEngineCapacity(): CarEngineCapacity | null {
     throw new Error('Not implemented');
   }
   
-  _simpleSearch(
-    list: (CarBrand | CarModel | CarFuel)[],
+  _simpleSearch<T extends (CarBrand | CarModel | CarFuel)>(
+    list: T[],
     search: string,
-    comporator: (item: DefaultCarEntity, search: string) => boolean = (item, search) => item.name === search
-  ): DefaultCarEntity | undefined {
-    return list.find((item) => comporator(item, search));
+    comporator: (item: T, search: string) => boolean = (item, search) => item.name === search
+  ): T | undefined {
+    return list.find((item) => comporator(item, search)) as T | undefined;
   } 
   
-  _advancedSearch(
+  _advancedSearch<T extends (CarBrand | CarModel | CarFuel)>(
     list: (CarBrand | CarModel | CarFuel)[],
     search: string
-  ): DefaultCarEntity | undefined {
+  ): T | undefined {
     const fuse = new this.Searcher(list, {
       includeScore: true,
       isCaseSensitive: false,
@@ -104,7 +110,7 @@ export class ParserCarData implements IParserCarData {
 
     const result = fuse.search(search);
 
-    return result?.[0]?.item;
+    return result?.[0]?.item as T | undefined;
   }
   
 }

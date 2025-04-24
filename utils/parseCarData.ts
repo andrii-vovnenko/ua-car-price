@@ -33,6 +33,11 @@ export class ParserCarData implements IParserCarData {
   rawCarData: RawCarData;
   constantsLibrary: ConstantsLibrary;
   Searcher: typeof Fuse;
+  carBrand: DefaultCarEntity;
+  carModel: DefaultCarEntity;
+  carFuel: DefaultCarEntity;
+  carProductionYear: DefaultCarEntity;
+  carEngineCapacity?: DefaultCarEntity | null;
   constructor({
     rawCarData,
   }: {
@@ -45,6 +50,11 @@ export class ParserCarData implements IParserCarData {
       carModels: carModels,
       carFuels: fuelTypes,
     };
+    this.carBrand = this.parseBrand();
+    this.carModel = this.parseModel();
+    this.carFuel = this.parseFuel();
+    this.carProductionYear = this.parseProductionYear();
+    this.carEngineCapacity = this.parseEngineCapacity();
   }
 
   validate(): void {

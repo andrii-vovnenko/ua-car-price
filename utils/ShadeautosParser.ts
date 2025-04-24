@@ -1,12 +1,6 @@
 import { IParserCarData, RawCarData, ParserCarData } from './parseCarData';
 
 export class ShadeautosParser extends ParserCarData implements IParserCarData {
-  carBrand: DefaultCarEntity;
-  carModel: DefaultCarEntity;
-  carFuel: DefaultCarEntity;
-  carProductionYear: DefaultCarEntity;
-  carEngineCapacity?: DefaultCarEntity | null;
-
   constructor({ rawCarData }: { rawCarData: RawCarData }) {
     super({ rawCarData });
     this.validate();

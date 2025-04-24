@@ -24,6 +24,7 @@ const apiResponseHandler = (carData: { brand: DefaultCarEntity, model: DefaultCa
 document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('.loading')?.classList.add('visible');
   communication.emit(communication.actions.INJECT_CONTENT_SCRIPT);
+
   communication.listen(communication.actions.ERROR, (error: string) => {
     console.log('Error:', error);
     const loading = document.querySelector('.loading') as HTMLElement;
@@ -32,7 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     errorElement.textContent = error;
     errorElement.classList.add('visible');
   });
+
   communication.listen(communication.actions.API_RESPONSE, apiResponseHandler);
+  
   communication.listen(communication.actions.CLOSE, () => {
     window.close();
   });

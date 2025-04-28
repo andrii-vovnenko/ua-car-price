@@ -13,7 +13,14 @@ type Action = typeof actions[keyof typeof actions];
 
 type CallbackType<T extends Action> = 
   T extends typeof actions.INJECT_CONTENT_SCRIPT ? () => void :
-  T extends typeof actions.API_RESPONSE ? (carData: { brand: DefaultCarEntity, model: DefaultCarEntity, fuel: DefaultCarEntity, productionYear: DefaultCarEntity, engineCapacity?: DefaultCarEntity | null, price: DefaultCarEntity }) => void :
+  T extends typeof actions.API_RESPONSE ? (carData: {
+    brand: DefaultCarEntity,
+    model: DefaultCarEntity,
+    fuel: DefaultCarEntity,
+    productionYear: DefaultCarEntity,
+    engineCapacity?: DefaultCarEntity | null,
+    price: DefaultCarEntity
+  }) => void :
   T extends typeof actions.RAW_CAR_DATA ? (rawCarData: RawCarData) => void :
   T extends typeof actions.ERROR ? (error: string) => void :
   T extends typeof actions.CLOSE ? () => void :

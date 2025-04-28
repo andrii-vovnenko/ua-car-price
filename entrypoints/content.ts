@@ -36,6 +36,7 @@ export default defineContentScript({
     const brand = rawCarData.get('brand') || '';
     const model = rawCarData.get('model') || '';
     const engineCapacity = rawCarData.get('engine capacity') || '';
+    const price = rawCarData.get('sales price nl') || '';
     
     communication.emit(communication.actions.RAW_CAR_DATA, {
       brand,
@@ -43,6 +44,7 @@ export default defineContentScript({
       fuel,
       productionYear: production,
       engineCapacity: engineCapacity,
+      price,
     });
   },
 });

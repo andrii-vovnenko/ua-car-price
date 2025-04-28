@@ -1,5 +1,5 @@
 import { IParserCarData, RawCarData, ParserCarData } from './parseCarData';
-import { CarEngineCapacity, CarProductionYear } from './types';
+import { CarEngineCapacity, CarProductionYear, CarPrice } from './types';
 
 export class ShadeautosParser extends ParserCarData implements IParserCarData {
   constructor({ rawCarData }: { rawCarData: RawCarData }) {
@@ -11,6 +11,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     this.carFuel = this.parseFuel();
     this.carProductionYear = this.parseProductionYear();
     this.carEngineCapacity = this.parseEngineCapacity();
+    this.carPrice = this.parsePrice();
   }
 
   validate(): void {
@@ -19,9 +20,23 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
       || !this.rawCarData.model
       || !this.rawCarData.fuel
       || !this.rawCarData.productionYear
+      || !this.rawCarData.price
     ) {
       throw new Error('Invalid car data');
     }
+  }
+
+  parsePrice(): CarPrice {
+    const price = this.rawCarData.price.replace(/\D/g, '').trim();
+
+    if (price) {
+      return {
+        name: 'Price',
+        value: parseInt(price),
+      };
+    }
+
+    throw new Error('Invalid price');
   }
 
   parseEngineCapacity(): CarEngineCapacity | null {

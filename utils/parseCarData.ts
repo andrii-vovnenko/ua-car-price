@@ -9,6 +9,7 @@ import {
   ConstantsLibrary,
   CarProductionYear,
   CarEngineCapacity,
+  CarPrice,
 } from './types';
 
 export type RawCarData = {
@@ -17,6 +18,7 @@ export type RawCarData = {
   fuel: string;
   productionYear: string;
   engineCapacity?: string;
+  price: string;
 };
 
 export interface IParserCarData {
@@ -26,6 +28,7 @@ export interface IParserCarData {
   carProductionYear: CarProductionYear;
   carEngineCapacity?: CarEngineCapacity | null;
   rawCarData: RawCarData;
+  carPrice: CarPrice;
   Searcher: typeof Fuse;
   validate(): void;
   parseBrand(): CarBrand;
@@ -33,6 +36,7 @@ export interface IParserCarData {
   parseFuel(): CarFuel;
   parseProductionYear(): CarProductionYear;
   parseEngineCapacity(): CarEngineCapacity | null;
+  getCarAge(): number;
 }
 
 export class ParserCarData implements IParserCarData {
@@ -44,6 +48,7 @@ export class ParserCarData implements IParserCarData {
   carFuel: CarFuel;
   carProductionYear: CarProductionYear;
   carEngineCapacity?: CarEngineCapacity | null;
+  carPrice: CarPrice;
   constructor({
     rawCarData,
   }: {
@@ -61,6 +66,7 @@ export class ParserCarData implements IParserCarData {
     this.carFuel = this.parseFuel();
     this.carProductionYear = this.parseProductionYear();
     this.carEngineCapacity = this.parseEngineCapacity();
+    this.carPrice = this.parsePrice();
   }
 
   validate(): void {
@@ -85,6 +91,14 @@ export class ParserCarData implements IParserCarData {
 
   parseEngineCapacity(): CarEngineCapacity | null {
     throw new Error('Not implemented');
+  }
+
+  parsePrice(): CarPrice {
+    throw new Error('Not implemented');
+  }
+
+  getCarAge(): number {
+    return new Date().getFullYear() - this.carProductionYear.value;
   }
   
   _simpleSearch<T extends (CarBrand | CarModel | CarFuel)>(

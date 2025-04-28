@@ -47,6 +47,7 @@ export default defineBackground(async () => {
           fuel: params.fuel,
           productionYear: params.productionYear,
           engineCapacity: params.engineCapacity,
+          price: params.price,
         },
       });
       communication.emit(communication.actions.API_RESPONSE, {
@@ -55,6 +56,7 @@ export default defineBackground(async () => {
         fuel: carData.carFuel,
         productionYear: carData.carProductionYear,
         engineCapacity: carData.carEngineCapacity,
+        price: carData.carPrice
       });
     } catch (error: any) {
       communication.emit(communication.actions.ERROR, error.message as string);

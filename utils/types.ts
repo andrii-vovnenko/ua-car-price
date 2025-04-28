@@ -1,5 +1,6 @@
 export type DefaultCarEntity = {
   name: string;
+  value: number | string;
 };
 export type CarBrand = DefaultCarEntity & {
   value: number;
@@ -15,6 +16,9 @@ export type CarProductionYear = DefaultCarEntity & {
 };
 export type CarEngineCapacity = DefaultCarEntity & {
   value: number | string;
+};
+export type CarPrice = DefaultCarEntity & {
+  value: number;
 };
 
 export type ConstantsLibrary = {

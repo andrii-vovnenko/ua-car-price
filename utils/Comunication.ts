@@ -19,7 +19,9 @@ type CallbackType<T extends Action> =
     fuel: DefaultCarEntity,
     productionYear: DefaultCarEntity,
     engineCapacity?: DefaultCarEntity | null,
-    price: DefaultCarEntity
+    price: DefaultCarEntity,
+    customsCosts: DefaultCarEntity,
+    fullPrice: DefaultCarEntity,
   }) => void :
   T extends typeof actions.RAW_CAR_DATA ? (rawCarData: RawCarData) => void :
   T extends typeof actions.ERROR ? (error: string) => void :

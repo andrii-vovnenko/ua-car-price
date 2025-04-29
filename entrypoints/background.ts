@@ -50,13 +50,18 @@ export default defineBackground(async () => {
           price: params.price,
         },
       });
+      const carFees = new CalculateCarFees(carData);
+      const fee = await carFees.calculateCarFees();
+      
       communication.emit(communication.actions.API_RESPONSE, {
         brand: carData.carBrand,
         model: carData.carModel,
         fuel: carData.carFuel,
         productionYear: carData.carProductionYear,
         engineCapacity: carData.carEngineCapacity,
-        price: carData.carPrice
+        price: carData.carPrice,
+        customsCosts: { name: 'Customs Costs', value: fee.customsClearanceCosts },
+        fullPrice: { name: 'Full Price', value: fee.fullPrice },
       });
     } catch (error: any) {
       communication.emit(communication.actions.ERROR, error.message as string);

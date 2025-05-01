@@ -15,7 +15,7 @@ export type CarProductionYear = DefaultCarEntity & {
   value: number;
 };
 export type CarEngineCapacity = DefaultCarEntity & {
-  value: number | string;
+  value: number;
 };
 export type CarPrice = DefaultCarEntity & {
   value: number;

@@ -47,7 +47,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
 
     return {
       name: 'Engine capacity',
-      value: engineCapacityNumber,
+      value: parseFloat(engineCapacityNumber),
     };
   }
 

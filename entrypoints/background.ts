@@ -17,6 +17,19 @@ export default defineBackground(async () => {
     return !!(auth.userId && auth.apiKey);
   }
 
+  communication.listen(communication.actions.SAVE_CREDENTIALS, async (credentials) => {
+    await browser.storage.local.set(credentials);
+  });
+
+  communication.listen(communication.actions.CLOSE_TAB, async () => {
+    browser.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+      if (tabs.length > 0 && tabs[0].id) {
+        const tabId = tabs[0].id;
+        await browser.tabs.remove(tabId);
+      }
+    });
+  });
+  
   communication.listen(communication.actions.INJECT_CONTENT_SCRIPT, async () => {
     // Check authentication before proceeding
     if (!await checkAuth()) {

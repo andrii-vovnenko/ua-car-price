@@ -1,4 +1,4 @@
-import { IParserCarData } from './parseCarData';
+import { IParserCarData } from '@/utils/parseCarData';
 
 interface ICarFees {
   fullPrice: number;

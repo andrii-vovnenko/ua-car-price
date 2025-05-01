@@ -4,7 +4,15 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   manifest: {
     host_permissions: [
-      "https://auto.ria.com/*" // <-- Grant permission to this domain
+      "https://auto.ria.com/*", // <-- Grant permission to this domain
+      "https://developers.ria.com/*", // <-- Grant permission to this domain
     ],
-  }
+    options_ui: {
+      page: 'options/index.html',
+      open_in_tab: true
+    },
+    permissions: [
+      'storage'
+    ]
+  },
 });

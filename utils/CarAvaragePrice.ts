@@ -1,3 +1,5 @@
+import { IExchanger } from './Exchanger';
+
 interface ICarAvaragePrice {
   getCarAvaragePrice({
     carBrand,
@@ -17,10 +19,11 @@ interface ICarAvaragePrice {
 export class AutoRiaAvaragePriceApi implements ICarAvaragePrice {
   private userId: string;
   private apiKey: string;
-
-  constructor(userId: string, apiKey: string) {
+  private exchanger: IExchanger;
+  constructor(userId: string, apiKey: string, exchanger: IExchanger) {
     this.userId = userId;
     this.apiKey = apiKey;
+    this.exchanger = exchanger;
   }
 
   async getCarAvaragePrice({
@@ -63,6 +66,7 @@ export class AutoRiaAvaragePriceApi implements ICarAvaragePrice {
 
     const data = await response.json();
 
-    return data.statisticData?.[0]?.price?.USD;
+    const avaragePrice = data.statisticData?.find((item: any) => item.id === 'avgPriceBlock')?.price?.USD;
+    return avaragePrice ? this.exchanger.exchangeUsdToEur(avaragePrice) : 0;
   }
 }

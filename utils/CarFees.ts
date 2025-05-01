@@ -10,7 +10,6 @@ export class CalculateCarFees {
   private car: IParserCarData;
   constructor(car: IParserCarData) {
     this.car = car;
-
   }
 
   async calculateCarFees(): Promise<ICarFees> {
@@ -21,7 +20,7 @@ export class CalculateCarFees {
     url.searchParams.set('age', this.car.getCarAge() > 15 ? 'gt15' : `lt${this.car.getCarAge()}`);
     url.searchParams.set('price', this.car.carPrice.value.toString());
     url.searchParams.set('engine', this.car.carEngineCapacity?.value.toString() ?? '');
-    url.searchParams.set('currencyId', '2'); // 2 - USD
+    url.searchParams.set('currencyId', '2'); // 2 - EUR
     url.searchParams.set('langId', '4'); // 4 - Ukrainian
 
     const response = await fetch(url);

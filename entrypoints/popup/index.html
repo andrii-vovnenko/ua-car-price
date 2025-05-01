@@ -3,23 +3,64 @@
 <html>
   <head>
     <link rel="stylesheet" href="./style.css" />
-    <title>My Extension Popup</title>
+    <title>Car Price UA</title>
   </head>
   <body>
     <div class="root">
       <div class="loading">
-        <div class="spiner"></div>
+        <div class="spinner"></div>
+        <p>Loading car data...</p>
       </div>
-      <div class="error"></div>
+      <div class="error">
+        <div class="error-icon">⚠️</div>
+        <p class="error-message"></p>
+      </div>
       <div class="content">
         <div class="title">
-          <h1>Car Data</h1>
-          <div class="description">
-          </div>
+          <h1>Car Information</h1>
+        </div>
+        <div class="car-details">
+          <ul class="description">
+            <li>
+              <span class="label">Brand</span>
+              <span class="brand-value"></span>
+            </li>
+            <li>
+              <span class="label">Model</span>
+              <span class="model-value"></span>
+            </li>
+            <li>
+              <span class="label">Fuel</span>
+              <span class="fuel-value"></span>
+            </li>
+            <li>
+              <span class="label">Production Year</span>
+              <span class="production-year-value"></span>
+            </li>
+            <li>
+              <span class="label">Engine Capacity</span>
+              <span class="engine-capacity-value"></span>
+            </li>
+            <li>
+              <span class="label">Price</span>
+              <span class="price-value"></span>
+            </li>
+            <li>
+              <span class="label">Customs Clearance Costs</span>
+              <span class="customs-clearance-costs-value"></span>
+            </li>
+            <li>
+              <span class="label">Full Price</span>
+              <span class="full-price-value"></span>
+            </li>
+            <li>
+              <span class="label">Avarage Price</span>
+              <span class="avarage-price-value"></span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-    <button id="close" onclick="window.close()"></button>
     <script src="./main.ts" type="module"></script>
   </body>
 </html>

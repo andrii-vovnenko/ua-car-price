@@ -4,21 +4,46 @@ import { communication } from '@/utils/Comunication';
 import { AutoRiaAvaragePriceApi } from '@/utils/CarAvaragePrice';
 import { ShadeautosParser } from '@/utils/ShadeautosParser';
 import { CalculateCarFees } from '@/utils/CarFees';
+import { Exchanger } from '@/utils/Exchanger';
 const shadeAutosUrl = 'www.schadeautos.nl';
+
+const RIA_API_KEY = import.meta.env.WXT_RIA_API_KEY;
+const RIA_USER_ID = import.meta.env.WXT_RIA_USER_ID;
 
 const hostToScriptMap: Record<string, string> = {
   [shadeAutosUrl]: './content-scripts/content.js',
 };
 
+const exchanger = new Exchanger();
+
 export default defineBackground(async () => {
+  if (RIA_API_KEY && RIA_USER_ID) {
+    await browser.storage.local.set({
+      userId: RIA_USER_ID,
+      apiKey: RIA_API_KEY,
+    });
+  }
   // Add authentication check helper
   async function checkAuth(): Promise<boolean> {
     const auth = await browser.storage.local.get(['userId', 'apiKey']);
     return !!(auth.userId && auth.apiKey);
   }
+  let avaragePriceApi: AutoRiaAvaragePriceApi | null = null;
+  if (await checkAuth()) {
+    avaragePriceApi = new AutoRiaAvaragePriceApi(
+      (await browser.storage.local.get('userId'))['userId'],
+      (await browser.storage.local.get('apiKey'))['apiKey'],
+      exchanger,
+    );
+  }
 
   communication.listen(communication.actions.SAVE_CREDENTIALS, async (credentials) => {
     await browser.storage.local.set(credentials);
+    avaragePriceApi = new AutoRiaAvaragePriceApi(
+      credentials.userId,
+      credentials.apiKey,
+      exchanger,
+    );
   });
 
   communication.listen(communication.actions.CLOSE_TAB, async () => {
@@ -80,20 +105,28 @@ export default defineBackground(async () => {
         },
       });
 
-      const avaragePriceApi = new AutoRiaAvaragePriceApi(
-        (await browser.storage.local.get('userId'))['userId'],
-        (await browser.storage.local.get('apiKey'))['apiKey'],
-      );
+      if (!avaragePriceApi) {
+        throw new Error('No API key found');
+      }
 
-      const avaragePrice = await avaragePriceApi.getCarAvaragePrice({
-        carBrand: carData.carBrand.value,
-        carModel: carData.carModel.value,
-        carFuel: carData.carFuel.value,
-        carProductionYear: carData.carProductionYear.value,
-        carEngineCapacity: carData.carEngineCapacity?.value || 0,
-      });
       const carFees = new CalculateCarFees(carData);
-      const fee = await carFees.calculateCarFees();
+
+      const [avaragePrice, fee] = await Promise.all([
+        avaragePriceApi.getCarAvaragePrice({
+          carBrand: carData.carBrand.value,
+          carModel: carData.carModel.value,
+          carFuel: carData.carFuel.value,
+          carProductionYear: carData.carProductionYear.value,
+          carEngineCapacity: carData.carEngineCapacity?.value || 0,
+        }).catch((error) => {
+          console.error('Error getting avarage price', error);
+          return 0;
+        }),
+        carFees.calculateCarFees().catch((error) => {
+          console.error('Error calculating car fees', error);
+          return { customsClearanceCosts: 0, fullPrice: 0 };
+        }),
+      ]);
       
       communication.emit(communication.actions.API_RESPONSE, {
         brand: carData.carBrand,

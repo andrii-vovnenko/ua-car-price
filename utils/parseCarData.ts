@@ -2,6 +2,7 @@ import Fuse from 'fuse.js';
 import { carBrands } from './brands';
 import { carModels } from './models';
 import { fuelTypes } from './fuel';
+import { carTransmissions } from './transmissions';
 import {
   CarBrand,
   CarModel,
@@ -10,6 +11,7 @@ import {
   CarProductionYear,
   CarEngineCapacity,
   CarPrice,
+  CarTransmission,
 } from './types';
 
 export type RawCarData = {
@@ -19,6 +21,7 @@ export type RawCarData = {
   productionYear: string;
   engineCapacity?: string;
   price: string;
+  transmission?: string;
 };
 
 export interface IParserCarData {
@@ -36,6 +39,7 @@ export interface IParserCarData {
   parseFuel(): CarFuel;
   parseProductionYear(): CarProductionYear;
   parseEngineCapacity(): CarEngineCapacity | null;
+  parseTransmission(): CarTransmission | null;
   getCarAge(): number;
 }
 
@@ -49,6 +53,7 @@ export class ParserCarData implements IParserCarData {
   carProductionYear: CarProductionYear;
   carEngineCapacity?: CarEngineCapacity | null;
   carPrice: CarPrice;
+  carTransmission: CarTransmission | null;
   constructor({
     rawCarData,
   }: {
@@ -60,6 +65,7 @@ export class ParserCarData implements IParserCarData {
       carBrands: carBrands,
       carModels: carModels,
       carFuels: fuelTypes,
+      carTransmissions: carTransmissions,
     };
     this.carBrand = this.parseBrand();
     this.carModel = this.parseModel();
@@ -67,9 +73,14 @@ export class ParserCarData implements IParserCarData {
     this.carProductionYear = this.parseProductionYear();
     this.carEngineCapacity = this.parseEngineCapacity();
     this.carPrice = this.parsePrice();
+    this.carTransmission = this.parseTransmission();
   }
 
   validate(): void {
+    throw new Error('Not implemented');
+  }
+
+  parseTransmission(): CarTransmission | null {
     throw new Error('Not implemented');
   }
 
@@ -109,8 +120,8 @@ export class ParserCarData implements IParserCarData {
     return list.find((item) => comporator(item, search)) as T | undefined;
   } 
   
-  _advancedSearch<T extends (CarBrand | CarModel | CarFuel)>(
-    list: (CarBrand | CarModel | CarFuel)[],
+  _advancedSearch<T extends (CarBrand | CarModel | CarFuel | CarTransmission)>(
+    list: (CarBrand | CarModel | CarFuel | CarTransmission)[],
     search: string
   ): T | undefined {
     const fuse = new this.Searcher(list, {

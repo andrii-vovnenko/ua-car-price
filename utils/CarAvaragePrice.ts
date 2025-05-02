@@ -32,12 +32,14 @@ export class AutoRiaAvaragePriceApi implements ICarAvaragePrice {
     carFuel,
     carProductionYear,
     carEngineCapacity,
+    carTransmission,
   }: {
     carBrand: number;
     carModel: number;
     carFuel: number;
     carProductionYear: number;
     carEngineCapacity: number;
+    carTransmission?: number;
   }): Promise<number> {
     const response = await fetch(`https://developers.ria.com/auto/ai-avarage-price/?user_id=${this.userId}&api_key=${this.apiKey}`, {
       method: 'POST',
@@ -60,6 +62,7 @@ export class AutoRiaAvaragePriceApi implements ICarAvaragePrice {
             gte: (carEngineCapacity - 400) / 1000,
             lte: (carEngineCapacity + 400) / 1000,
           },
+          gearBoxId: carTransmission,
         },
       }),
     });

@@ -102,6 +102,7 @@ export default defineBackground(async () => {
           productionYear: params.productionYear,
           engineCapacity: params.engineCapacity,
           price: params.price,
+          transmission: params.transmission,
         },
       });
 
@@ -118,6 +119,7 @@ export default defineBackground(async () => {
           carFuel: carData.carFuel.value,
           carProductionYear: carData.carProductionYear.value,
           carEngineCapacity: carData.carEngineCapacity?.value || 0,
+          carTransmission: carData.carTransmission?.value || undefined,
         }).catch((error) => {
           console.error('Error getting avarage price', error);
           return 0;
@@ -138,6 +140,7 @@ export default defineBackground(async () => {
         customsCosts: { name: 'Customs Costs', value: fee.customsClearanceCosts },
         fullPrice: { name: 'Full Price', value: fee.fullPrice },
         avaragePrice: { name: 'Avarage Price', value: avaragePrice },
+        transmission: carData.carTransmission,
       });
     } catch (error: any) {
       communication.emit(communication.actions.ERROR, error.message as string);

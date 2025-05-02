@@ -12,6 +12,7 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     this.carProductionYear = this.parseProductionYear();
     this.carEngineCapacity = this.parseEngineCapacity();
     this.carPrice = this.parsePrice();
+    this.carTransmission = this.parseTransmission();
   }
 
   validate(): void {
@@ -24,6 +25,30 @@ export class ShadeautosParser extends ParserCarData implements IParserCarData {
     ) {
       throw new Error('Invalid car data');
     }
+  }
+
+  parseTransmission(): CarTransmission | null {
+    console.log(this.rawCarData.transmission);
+    if (!this.rawCarData.transmission) return null;
+
+    let transmission = this._simpleSearch<CarTransmission>(
+      this.constantsLibrary.carTransmissions,
+      this.rawCarData.transmission
+    );
+    if (transmission) return transmission;
+
+    const transmissionParts = this.rawCarData.transmission.split(' ');
+
+    while (transmissionParts.length > 0) {
+      transmission = this._advancedSearch<CarTransmission>(
+        this.constantsLibrary.carTransmissions,
+        transmissionParts.join(' ')
+      );
+      if (transmission) return transmission;
+      transmissionParts.pop();
+    }
+
+    return transmission || null;
   }
 
   parsePrice(): CarPrice {

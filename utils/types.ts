@@ -19,11 +19,15 @@ export type CarEngineCapacity = DefaultCarEntity & {
 };
 export type CarPrice = DefaultCarEntity & {
   value: number;
+};  
+export type CarTransmission = DefaultCarEntity & {
+  value: number;
 };
 
 export type ConstantsLibrary = {
   carBrands: CarBrand[],
   carModels: Record<string, CarModel[]>,
-  carFuels: CarFuel[]
+  carFuels: CarFuel[],
+  carTransmissions: CarTransmission[],
 }
 

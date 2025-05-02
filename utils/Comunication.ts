@@ -25,6 +25,7 @@ type CallbackType<T extends Action> =
     customsCosts: DefaultCarEntity,
     fullPrice: DefaultCarEntity,
     avaragePrice: DefaultCarEntity,
+    transmission?: DefaultCarEntity | null,
   }) => void :
   T extends typeof actions.RAW_CAR_DATA ? (rawCarData: RawCarData) => void :
   T extends typeof actions.ERROR ? (error: string) => void :

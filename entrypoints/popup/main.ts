@@ -10,7 +10,8 @@ const apiResponseHandler = (carData: {
   price: DefaultCarEntity,
   customsCosts: DefaultCarEntity,
   fullPrice: DefaultCarEntity,
-  avaragePrice: DefaultCarEntity
+  avaragePrice: DefaultCarEntity,
+  transmission?: DefaultCarEntity | null,
 }) => {
   const content = document.querySelector('.content') as HTMLElement;
   const brandValue = document.querySelector('.brand-value') as HTMLElement;
@@ -22,6 +23,7 @@ const apiResponseHandler = (carData: {
   const avaragePriceValue = document.querySelector('.avarage-price-value') as HTMLElement;
   const customsCostsValue = document.querySelector('.customs-clearance-costs-value') as HTMLElement;
   const fullPriceValue = document.querySelector('.full-price-value') as HTMLElement;
+  const transmissionValue = document.querySelector('.transmission-value') as HTMLElement;
 
   brandValue.textContent = carData.brand.name || 'n/a';
   modelValue.textContent = carData.model.name || 'n/a';
@@ -32,7 +34,7 @@ const apiResponseHandler = (carData: {
   avaragePriceValue.textContent = (carData.avaragePrice.value.toString() as string) || 'n/a';
   customsCostsValue.textContent = (carData.customsCosts.value.toString() as string) || 'n/a';
   fullPriceValue.textContent = (carData.fullPrice.value.toString() as string) || 'n/a';
-
+  transmissionValue.textContent = (carData.transmission?.name || 'n/a') as string;
   content.classList.add('visible');
   document.querySelector('.loading')?.classList.remove('visible');
 };

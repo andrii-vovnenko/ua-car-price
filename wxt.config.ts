@@ -6,6 +6,7 @@ export default defineConfig({
     host_permissions: [
       "https://auto.ria.com/*", // <-- Grant permission to this domain
       "https://developers.ria.com/*", // <-- Grant permission to this domain
+      "https://www.schadeautos.nl/*", // <-- Grant permission to this domain
     ],
     options_ui: {
       page: 'options/index.html',

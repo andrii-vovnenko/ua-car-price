@@ -11,7 +11,7 @@ const RIA_API_KEY = import.meta.env.WXT_RIA_API_KEY;
 const RIA_USER_ID = import.meta.env.WXT_RIA_USER_ID;
 
 const hostToScriptMap: Record<string, string> = {
-  [shadeAutosUrl]: './content-scripts/content.js',
+  [shadeAutosUrl]: './shadeautos-content.js',
 };
 
 const exchanger = new Exchanger();
